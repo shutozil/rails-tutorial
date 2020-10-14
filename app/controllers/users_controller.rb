@@ -24,10 +24,17 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
+    # @user = User.new(params[:user])
+    ## 上記のような実装は危険
+    ## ユーザから受けた入力をUserインスタンスに渡している
+    ### 何がどう危ないかの例⬇️
+    ### >ここで、Userモデルにadmin属性というものがあるとしましょう。この属性は、Webサイトの管理者であるかどうかを示します (この属性を実装するのは10.4.1になってからです)。admin=’1’という値をparams[:user]の一部に紛れ込ませて渡してしまえば、この属性をtrueにすることができます。
+    ### strong parametersでここで扱うパラメータではadminを含めなければ、上記のような危険は回避される。
     @user = User.new(user_params)
 
     respond_to do |format|
       if @user.save
+        flash[:success] = "Welcome to the Sample App!"
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
@@ -69,6 +76,6 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:name, :email)
+      params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
 end
