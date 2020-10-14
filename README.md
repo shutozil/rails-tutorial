@@ -39,3 +39,13 @@ $ rails server
 
 詳しくは、[*Ruby on Rails チュートリアル*](https://railstutorial.jp/)
 を参考にしてください。
+
+- console サンドボックスモード
+```
+$ rails console --sandbox
+Loading development environment in sandbox
+Any modifications you make will be rolled back on exit
+>>
+```
+>"Any modifications you make will be rolled back on exit" (ここで行ったすべての変更は終了時にロールバックされます) というメッセージにわかりやすく示されているように、コンソールをサンドボックスで起動すると、そのセッションで行ったデータベースへの変更をコンソールの終了時にすべて “ロールバック” (取り消し) してくれます。
+
