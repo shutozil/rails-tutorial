@@ -15,7 +15,9 @@ class User < ApplicationRecord
   # uniqueness: {case_sensitive: false} -> 大文字小文字の区別を無視
 
   has_secure_password # railsの組み込みメソッド
-  validates :password, presence: true, length: { minimum: 6 }
+  # has_secure_passwordでは、オブジェクト生成時に存在性を検証するようになっているため、
+  # 空のパスワード (nil) が新規ユーザー登録時に有効になることはありません。
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
 
   # 渡された文字列のハッシュ値を返す
   def User.digest(string)
