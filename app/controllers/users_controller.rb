@@ -35,17 +35,24 @@ class UsersController < ApplicationController
     ### strong parametersでここで扱うパラメータではadminを含めなければ、上記のような危険は回避される。
     @user = User.new(user_params)
 
-    respond_to do |format|
-      if @user.save
-        log_in @user
-        flash[:success] = "Welcome to the Sample App!"
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render :show, status: :created, location: @user }
-      else
+    if @user.save
+      # log_in @user
+      # flash[:success] = "Welcome to the Sample App!"
+      # format.html { redirect_to @user, notice: 'User was successfully created.' }
+      # format.json { render :show, status: :created, location: @user }
+      
+      # ユーザ作成後はログインするのではなく、有効性チェックのメールを送信する
+      # UserMailer.account_activation(@user).deliver_now
+      @user.send_activation_email
+      flash[:info] = "Please check your email to activate your account."
+      redirect_to root_url
+    else
+      respond_to do |format|
         format.html { render :new }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
+    
   end
 
   # PATCH/PUT /users/1
